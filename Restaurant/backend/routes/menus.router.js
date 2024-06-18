@@ -27,10 +27,7 @@ menusRouter.get("/:id", async (req ,res, next) => {
         res.json(menu);
     }
     catch (error) {
-        console.log(error);
-        res
-            .status(500)
-            .json({ error: "Database error obteniendo el menu." });
+        next(error);
     }
 });
 

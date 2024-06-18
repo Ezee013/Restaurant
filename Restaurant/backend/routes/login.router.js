@@ -15,49 +15,38 @@ function generarJwt(usr) {
     return jwt.sign(payload, process.env.SECRET);
 };
 
-loginRouter.post("/login", async (req, res) => {
+loginRouter.post("/login", async (req, res, next) => {
     // console.log(req.body);
     const { userName, password } = req.body;
 
-    const cliente = checkClientePassword(userName, password);
-
-    if (!cliente) {
-        res.status(401).send({
-            error: "Usuario o contraseña inválidos"
+    try {
+        const cliente = await checkClientePassword(userName,password);
+        res.json({
+            userName: cliente.mail,
+            nombre: `${cliente.nombre} ${cliente.apellido}`,
+            token: generarJwt(cliente)
         });
-        return res;
-    };
-
-    res.json({
-        userName: cliente.mail,
-        nombre: `${cliente.nombre} ${cliente.apellido}`,
-        token: generarJwt(cliente)
-    });
-
-    return res;
+    } catch (error) {
+        console.log(error);
+        next(error);
+    }
 });
 
 loginRouter.post("/register", async (req, res, next) => {
+    const { mail } = req.body;
     try {
-        const { mail } = req.body;
         const usrExistente = await getClienteByMail(mail);
-        console.log(usrExistente);
-        if (usrExistente !== null) {
-            console.log("entro");
-            res.status(401).send({
-                error: "Cliente ya registrado"
-            });
-            return false;
-        }
-        console.log(req.body);
-        const cliente = await createCliente(req.body);
 
+        if (usrExistente) {
+            throw new Error("userExists");
+        } 
+        
+        const cliente = await createCliente(req.body);
         res.status(201).json(cliente);
     }
     catch (err) {
         next(err);
     }
-    return true;
 });
 
 export default loginRouter;

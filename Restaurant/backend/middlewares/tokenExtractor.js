@@ -17,11 +17,12 @@ export default function extractToken(req, res, next) {
         return res.status(401).json({ error: "el token no existe o es inválido" });
     }
 
-    const { id: idCliente, revisor } = decodedToken;
+    const { id, admin } = decodedToken;
 
-    req.idCliente = idCliente;
-    req.admin = revisor;
+    req.idCliente = id;
+    req.admin = admin;
+
+    console.log({ usuario: req.idCliente, admin: req.admin });
 
     next();
-    return true;
 };

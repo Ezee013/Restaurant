@@ -1,0 +1,106 @@
+import { useForm } from 'react-hook-form';
+import { useLocation, Link, useNavigate, useParams } from 'react-router-dom';
+import reservaService from '../../services/reservaService';
+import { useEffect, useState } from 'react';
+import { setToken } from '../../services/baseService';
+
+export const UpdateReserva = () => {
+
+    const { register, handleSubmit, setValue, formState: { errors } } = useForm();
+    const [errorMessage, setErrorMessage] = useState('');
+    const [reserva, setReserva] = useState('');
+    const navigate = useNavigate();
+    const location = useLocation();
+    const {idReserva} = useParams();
+    const mesaSeleccionada = location.state?.mesaSeleccionada;
+
+    const fetchReserva = async (id) => {
+      const reserva = await reservaService.getReservaById(id);
+      setReserva(reserva);
+      setValue('date', reserva.fechaHora);
+      setValue('personas', reserva.nroPersonas);
+      setValue('mesa', reserva.idMesa);
+    }
+
+    useEffect(() => {
+        const loggedUser = window.localStorage.getItem("LogedUser")
+        if (loggedUser) {
+          const { token } = JSON.parse(loggedUser);
+          setToken(token);
+          fetchReserva(idReserva);
+        }else{
+            navigate("/login");  
+        }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, [navigate, idReserva]);
+
+    const onSubmit = async (data) => {
+      console.log(data)
+        try {
+          const req = {
+            idMesa: data.mesa,
+            fechaHora: data.date,
+            nroPersonas: data.personas
+          }
+          await reservaService.updateReserva(idReserva, req);
+          window.alert("Reserva actualizada con exito");
+          navigate(`/reserva/${idReserva}`); 
+        } catch (error) {
+            if (error.response) {
+                setErrorMessage(error.response.data.res);
+            } else {
+                setErrorMessage("Error al actualizar la reserva");
+            }
+            console.error("Error al actualizar reserva:", error.error);
+            console.log(data)
+          }
+    }
+
+    return (
+      <div className="d-flex justify-content-center align-items-center vh-100 bg-dark">
+        <div className="card text-center border border-3" style={{width: '70%'}}>
+          <div className="card-header bg-secondary" >
+            <div className='mx-5'>
+              <img src="/src/assets/react.svg" alt="Logo" width="50" className="img-fluid"/>
+            </div>
+            <div className='px-5'>
+                <h3>RESTAURANT</h3>
+            </div>
+          </div>  
+            {errorMessage && (
+                <div className="alert alert-danger" role="alert">
+                    {errorMessage}
+                </div>
+            )}
+            <div className="card-body">
+            <h1>ACTUALIZAR RESERVA</h1>
+                <form id="login" onSubmit={handleSubmit(onSubmit)}>
+                    <div className="m-5 mb-4">
+                        <label htmlFor="personas" className="form-label">Mesa</label>
+                        <input
+                            type="text"
+                            className={`form-control m-2 ${errors.mesa ? 'is-invalid' : ''} ${mesaSeleccionada ? "border border-dark" : ""}`}
+                            value={mesaSeleccionada ? mesaSeleccionada.idMesa : reserva.idMesa}
+                            readOnly
+                            {...register('mesa', { required: false })}
+                        />
+                        <button onClick={() => navigate(`/mesas/update/${idReserva}`)} className="btn btn-primary mt-3">Seleccionar mesa</button>
+                    </div>
+                    <div className="m-5">
+                    <label htmlFor="date" className="form-label">Fecha</label>
+                    <input type="date"  id="date" className={`form-control m-2 ${errors.date ? 'is-invalid' : ''}`} autoComplete="date" {...register('date', { required: false })}/>
+                    </div>
+                    <div className="m-5 mb-4">
+                    <label htmlFor="personas" className="form-label">Cantidad de Personas</label>
+                    <input type="number" id="personas" className={`form-control m-2 ${errors.personas ? 'is-invalid' : ''}`} placeholder="Ingrese la cantidad de personas" autoComplete="personas" {...register("personas", { required: false })}/>
+                    </div>
+                    <button type="submit" className="btn btn-success">Actualizar</button>
+                </form>
+            </div>
+            <div className="card-footer text-body-secondary bg-body-secondary py-3"> 
+                <Link to={`/reserva/${idReserva}`}>No quiero actualizar la reserva</Link>
+            </div>
+        </div>
+      </div>
+  )
+}

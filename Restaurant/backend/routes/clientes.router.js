@@ -12,9 +12,7 @@ clientesRouter.get("/", async (req ,res, next) => {
     }
     catch (error) {
         console.log(error);
-        res
-            .status(500)
-            .json({ error: "Database error obteniendo clientes." });
+        next(error);
     }
 });
 
@@ -28,9 +26,7 @@ clientesRouter.get("/:id", async (req ,res, next) => {
     }
     catch (error) {
         console.log(error);
-        res
-            .status(500)
-            .json({ error: "Database error obteniendo el cliente." });
+        next(error);
     }
 });
 

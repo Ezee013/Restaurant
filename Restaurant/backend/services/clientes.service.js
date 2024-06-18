@@ -5,16 +5,13 @@ const SALTROUNDS = 10;
 
 export async function getClientes(){
     const clientes = await Cliente.findAll();
-    if (!clientes) {
-        throw new Error("Clientes no encontrados");
-    }
     return clientes;
 };
 
 export async function getClienteById(id){
     const cliente = await Cliente.findByPk(id);
     if (!cliente) {
-        throw new Error("Cliente no encontrado");
+        throw new Error("cannotGet");
     }
     return cliente;
 };
@@ -55,19 +52,13 @@ export async function updateCliente(idCliente, nombre, apellido, mail){
 */
 
 export async function updateCliente(id, data){
-    const cliente = await Cliente.findByPk(id);
-    if (!cliente) {
-        throw new Error("Cliente no encontrado");
-    }
+    await getClienteById(id);
     return Cliente.update(data, { where: {idCliente: id} });
 };
 
-export async function deleteCliente(idCliente){
-    const cliente = await Cliente.findByPk(idCliente);
-    if (!cliente) {
-        throw new Error("Cliente no encontrado");
-    };
-    await cliente.destroy();
+export async function deleteCliente(id){
+    await getClienteById(id);
+    await Cliente.destroy({ where: {idCliente: id}});
 };
 
 export async function getClienteByMail(mail) {
@@ -80,9 +71,13 @@ export async function getClienteByMail(mail) {
 
 export async function checkClientePassword(email, password) {
     const cliente = await getClienteByMail(email);
-
-    if(!cliente) return cliente;
-
+    if(!cliente ){
+        throw new Error("loginError");
+    }
     const validPassword = await bcrypt.compare(password, cliente.password);
-    return validPassword;
+    if(!validPassword ){
+        throw new Error("loginError");
+    }
+    
+    return cliente;
 };

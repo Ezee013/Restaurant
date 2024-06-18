@@ -22,15 +22,12 @@ categoriasRouter.get("/:id", async (req ,res, next) => {
     try {
         // realizo la consulta a la base de datos.
         const categoria = await getCategoriaById(req.params.id);
-
         // envío la respuesta con el resultado de la consulta.
         res.json(categoria);
     }
     catch (error) {
         console.log(error);
-        res
-            .status(500)
-            .json({ error: "Database error obteniendo la categoria." });
+        next(error);
     }
 });
 

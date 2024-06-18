@@ -19,10 +19,16 @@ const Cliente = sequelize.define("Cliente", {
         field: "APELLIDO"
     },
     mail: {
-        type: DataTypes.STRING(100),
+        type: DataTypes.STRING,
         allowNull: false,
         unique: true,
-        field: "MAIL"
+        field: "MAIL",
+        unique: true,
+        validate: {
+            isEmail: {
+                msg: 'El correo electrónico no tiene un formato válido.'
+            }
+        }
     },
     password: {
         type: DataTypes.STRING(100),

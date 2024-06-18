@@ -6,7 +6,7 @@ const reservasRouter = appExpress.Router();
 reservasRouter.get("/", async (req ,res, next) => {
     try {
         // realizo la consulta a la base de datos.
-        const reservas = await getReservas();
+        const reservas = await getReservas(req.idCliente);
 
         // envío la respuesta con el resultado de la consulta.
         res.json(reservas);
@@ -28,36 +28,27 @@ reservasRouter.get("/:id", async (req ,res, next) => {
         res.json(reserva);
     }
     catch (error) {
-        console.log(error);
-        res
-            .status(500)
-            .json({ error: "Database error obteniendo la reserva." });
+        next(error);
     }
 });
 
 reservasRouter.post("/", async (req, res, next) => {
     const { idMesa, nroPersonas } = req.body;
     const mesa = await Mesa.findByPk(idMesa);
-    if (!mesa) {
-        return res.status(404).json({ error: 'Mesa no encontrada' });
-    }
 
-    if(mesa.disponible){
-        if(nroPersonas <= mesa.capacidad){
-            try {
-                const reserva = await createReserva(req.body);
-                res.status(201).json(reserva);
-            } catch (error) {
-                next(error);
-            }
-        }else{
-            res.json({res: "La cantidad de personas supera la capacidad de la mesa"});
-        }
-    }else{
-        res.json({res: "La mesa no esta disponible"});
+    if (!mesa) return res.status(404).json({ error: 'La mesa asociada al pedido no existe' });
+
+    if(nroPersonas >= mesa.capacidad ) return res.status(409).json({res: "La cantidad de personas supera la capacidad de la mesa"});
+
+    //if(mesa.disponible)
+    try {
+        req.body.idCliente = req.idCliente;
+        const reserva = await createReserva(req.body);
+        res.status(201).json(reserva);
+    } catch (error) {
+        next(error);
     }
 });
-
 
 reservasRouter.put("/:id", async (req, res, next) => {
     try {

@@ -27,10 +27,7 @@ mesasRouter.get("/:id", async (req ,res, next) => {
         res.json(mesa);
     }
     catch (error) {
-        console.log(error);
-        res
-            .status(500)
-            .json({ error: "Database error obteniendo la mesa." });
+        next(error);
     }
 });
 

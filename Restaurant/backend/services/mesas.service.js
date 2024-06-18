@@ -6,6 +6,9 @@ export async function getMesas(){
 };
 
 export async function getMesaById(id){
+    if (!mesa) {
+        throw new Error("cannotGet");
+        };
     const mesa = await Mesa.findByPk(id);
     return mesa;
 };
@@ -16,9 +19,11 @@ export async function createMesa(data){
 };
 
 export async function updateMesa(id, data){
+    await getMesaById(id);
     return Mesa.update(data, { where: { idMesa: id } } );
 };
 
 export async function deleteMesa(id){
+    await getMesaById(id);
     return Mesa.destroy( { where: { idMesa: id } } );
 };
