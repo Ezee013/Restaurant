@@ -47,7 +47,7 @@ export const Login = () => {
 
   return (
     <div className="d-flex justify-content-center align-items-center bg-dark" style={{height: '100%'}}>
-      <div className="card text-center border border-3" style={{ width: '65%', height: '80%' }}>
+      <div className="card text-center border border-3" style={{ width: '65%'}}>
         <div className="card-header bg-secondary">
           <div className='mx-5'>
             <img src="../src/assets/react.svg" alt="Logo" width="50" className="img-fluid"/>
