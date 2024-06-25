@@ -4,10 +4,7 @@ const categoriasRouter = appExpress.Router();
 
 categoriasRouter.get("/", async (req ,res, next) => {
     try {
-        // realizo la consulta a la base de datos.
         const categorias = await getCategorias();
-
-        // envío la respuesta con el resultado de la consulta.
         res.json(categorias);
     }
     catch (error) {

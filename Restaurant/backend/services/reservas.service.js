@@ -11,11 +11,27 @@ export async function getReservas(idCliente){
                 required: true
             }
         ],
-        //where: activas ? { activa: 1 } : {},
-        where: {idCliente: idCliente}
+        where: {idCliente: idCliente},
+        order:  [['fechaHora', 'DESC']]
         //limit: 5
     }
-);
+    );
+    return reservas;
+};
+
+export async function getReservasActivas(idCliente){
+    const reservas = await Reserva.findAll({
+        include: [
+            {
+                model: Mesa,
+                as: "mesa",
+                required: true
+            }
+        ],
+        where: {idCliente: idCliente, activa: true},
+        order:  [['fechaHora', 'DESC']]
+    }
+    );
     return reservas;
 };
 
@@ -56,3 +72,19 @@ export async function deleteReserva(id){
     await getReservaById(id);
     return Reserva.destroy( { where: { idReserva: id }});
 };
+
+export async function verificarActivas(){
+    const reservas = await Reserva.findAll();
+    const today = new Date();
+    const todayUTC = new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate(), today.getHours(), today.getMinutes(), today.getSeconds()));
+    
+    const updatePromises = reservas.map(async (reserva) => {
+        //const reservaDateUTC = new Date(Date.UTC(reserva.fechaHora.getFullYear(), reserva.fechaHora.getMonth(), reserva.fechaHora.getDate()));
+    
+        if (reserva.fechaHora < todayUTC) {
+          return Reserva.update({ activa: false }, { where: { idReserva: reserva.idReserva } });
+        } 
+      });
+    
+    await Promise.all(updatePromises);
+}

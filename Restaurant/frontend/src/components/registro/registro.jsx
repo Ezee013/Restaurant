@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import doRegister from '../../services/registerService';
+import Swal from 'sweetalert2';
 
 export const Registro = () => {
 
@@ -31,7 +32,13 @@ export const Registro = () => {
       const response = await doRegister(newUser);
 
       if (response && typeof response === 'object') {
-        window.alert("Usuario creado con exito");
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: "Usuario registrado con exito!",
+          showConfirmButton: false,
+          timer: 1500
+        });
         navigate('/login')
       } else {
         setErrorMessage('Error desconocido al registrar el usuario')

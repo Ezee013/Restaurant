@@ -12,13 +12,17 @@ const getReservas = async () => {
     // const response = await axios.get(`${baseUrl}/estaciones`, {
     //   headers: {"Authorization" : `Bearer ${token}`}
     // })  
-    const response = await axios.get(`${baseUrl}/reservas`)
+    const response = await axios.get(`${baseUrl}/reservas`);
     return response.data
   };
 
+const getReservasActivas = async () => {
+    const response = await axios.get(`${baseUrl}/reservas/active`);
+    return response.data
+}
+
 const getReservaById = async (id) => {
     const response = await axios.get(`${baseUrl}/reservas/${id}`);
-    console.log(response.data)
     return response.data
 }
 
@@ -31,10 +35,10 @@ const updateReserva = async (id, data) => {
     const response = await axios.put(`${baseUrl}/reservas/${id}`, data);
     return response.data
 }
-  
+
 const createReserva = async (data) => {
     const response = await axios.post(`${baseUrl}/reservas`, data);
     return response.data
 }
 
-export default {getReservas, getReservaById, updateReserva, deleteReserva, createReserva}
+export default {getReservas, getReservasActivas, getReservaById, updateReserva, deleteReserva, createReserva}

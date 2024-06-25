@@ -27,6 +27,11 @@ const Reserva = sequelize.define("Reserva", {
         type: DataTypes.INTEGER,
         allowNull: false,
         field: "NRO_PERSONAS"
+    },
+    activa: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
+        field: "ACTIVA"
     }
 },{
     timestamps: false,

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useForm } from 'react-hook-form';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import pedidoService from '../../services/pedidoService';
@@ -5,31 +6,38 @@ import { useEffect, useState } from 'react';
 import { setToken } from '../../services/baseService';
 import Swal from 'sweetalert2';
 
-export const CreatePedido = () => {
+export const UpdatePedido = () => {
 
-    const { register, handleSubmit, formState: { errors } } = useForm();
+    const { register, handleSubmit, setValue, formState: { errors } } = useForm();
     const [errorMessage, setErrorMessage] = useState('');
+    const [pedido, setPedido] = useState('');
     const navigate = useNavigate();
     const location = useLocation();
-    const { idReserva } = useParams();
-    const  menuSeleccionado  = location.state?.menuSeleccionado;
+    const { idPedido, idReserva } = useParams();
+    const [menuSeleccionado] = useState(location.state?.menuSeleccionado || null);
 
+
+    const fetchPedido = async (id) => {
+        const pedido = await pedidoService.getPedidoById(id);
+        setPedido(pedido);
+        setValue('cantidad', pedido.cantidad);
+        setValue('menu', pedido.idMenu);
+      }
 
     const onSubmit = async (data) => {
       try {
         const req = {
-          idReserva: idReserva,
-          idMenu: data.menu,
+          idMenu: menuSeleccionado?.idMenu || pedido.idMenu,
           cantidad: data.cantidad
         };
-        await pedidoService.createPedido(req);
+        await pedidoService.updatePedido(idPedido, req);
         Swal.fire({
-          position: "top-end",
-          icon: "success",
-          title: "Your work has been saved",
-          showConfirmButton: false,
-          timer: 1500
-        });
+            position: "top-end",
+            icon: "success",
+            title: "Pedido actualizado con exito!",
+            showConfirmButton: false,
+            timer: 1500
+          });
         navigate(`/reserva/${idReserva}`); 
         } catch (error) {
           if (error.response) {
@@ -47,15 +55,16 @@ export const CreatePedido = () => {
         }
       };
 
-      useEffect(() => {
+    useEffect(() => {
         const loggedUser = window.localStorage.getItem("LogedUser")
         if (loggedUser) {
           const { token } = JSON.parse(loggedUser);
           setToken(token);
+          fetchPedido(idPedido);
         }else{
             navigate("/login");  
         }
-        }, [menuSeleccionado, navigate]);
+        }, [idPedido, navigate]);
 
   return (
     <div className="d-flex justify-content-center align-items-center vh-100 bg-dark">
@@ -74,7 +83,7 @@ export const CreatePedido = () => {
             </div>
         )}
         <div className="card-body">
-          <h1>CREAR PEDIDO</h1> 
+          <h1>EDITAR PEDIDO</h1> 
           <form id="login" onSubmit={handleSubmit(onSubmit)}>
             <div className="m-5 mb-4">
                 <label htmlFor="menu" className="form-label">Menu</label>
@@ -82,23 +91,23 @@ export const CreatePedido = () => {
                     id='menu'
                     type="text"
                     className={`form-control m-2 ${errors.menu ? 'is-invalid' : ''} ${menuSeleccionado ? "border border-primary" : ""}`}
-                    value={menuSeleccionado ? menuSeleccionado.idMenu : ''}
+                    //value={menuSeleccionado ? menuSeleccionado.idMenu : pedido.idMenu}
                     readOnly
                     {...register('menu', { required: true })}
                 />
                 {errors.menu && <div className="invalid-feedback">Por favor, seleccione un menu</div>}
-                <button onClick={() => navigate(`/menus/create/${idReserva}/none`)} className="btn btn-primary">Seleccionar menu</button>
+                <button onClick={() => navigate(`/menus/update/${idReserva}/${idPedido}`)} className="btn btn-outline-primary mt-2">Seleccionar menu</button>
             </div>
             <div className="m-5 mb-4">
               <label htmlFor="cantidad" className="form-label">Cantidad</label>
               <input type="number" id="cantidad" className={`form-control m-2 ${errors.cantidad ? 'is-invalid' : ''}`} placeholder="Ingrese la cantidad de menus" autoComplete="cantidad" {...register("cantidad", { required: true })}/>
               {errors.cantidad && <div className="invalid-feedback">Por favor, ingrese la cantidad de Menus</div>}
             </div>
-            <button type="submit" className="btn btn-outline-success">Crear</button>
+            <button type="submit" className="btn btn-success">Actualizar</button>
           </form>
         </div>
         <div className="card-footer text-body-secondary py-3 bg-body-secondary"> 
-          <Link to={`/reserva/${idReserva}`} >No quiero hacer un pedido</Link>
+          <Link to={`/reserva/${idReserva}`} >No quiero actualizar el pedido</Link>
         </div>
       </div>
     </div>

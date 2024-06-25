@@ -1,14 +1,17 @@
 import appExpress from "express";
-import { getMenus, getMenuById, createMenu, updateMenu, deleteMenu} from "../services/menus.service.js";
+import { getMenus, getMenusFiltered, getMenuById, createMenu, updateMenu, deleteMenu} from "../services/menus.service.js";
 const menusRouter = appExpress.Router();
 
 menusRouter.get("/", async (req ,res, next) => {
     try {
-        // realizo la consulta a la base de datos.
-        const menus = await getMenus();
-
-        // envío la respuesta con el resultado de la consulta.
-        res.json(menus);
+        if (Object.keys(req.query).length !== 0) {
+            const filtro = req.query.filter;
+            const menus = await getMenusFiltered(filtro);
+            res.json(menus);
+        } else {
+            const menus = await getMenus();
+            res.json(menus);
+        }
     }
     catch (error) {
         console.log(error);

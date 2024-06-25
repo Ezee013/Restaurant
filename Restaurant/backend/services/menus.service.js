@@ -14,6 +14,13 @@ export async function getMenus(){
     return menus;
 };
 
+export async function getMenusFiltered(filtro){
+    const menus = await Menu.findAll({
+        where: {idCategoria: filtro}}
+    );
+    return menus;
+};
+
 export async function getMenuById(id){
     const menu = await Menu.findByPk(id);
     if (!menu) {

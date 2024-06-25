@@ -38,8 +38,8 @@ export const Mesa = () => {
         }
       }, [navigate]);
 
-    if (!mesas) {
-        return <div className="alert alert-secondary" role="alert">Loading...</div>;
+    if (!mesas.length) {
+        return <div className="alert alert-secondary m-auto" role="alert">No se pudieron obtener las mesas...</div>;
     }
 
     return (

@@ -2,16 +2,6 @@ import axios from "axios";
 import { baseUrl } from "./baseService";
 
 const getMesas = async () => {
-    // return fetch("http://localhost:3001/api/estaciones", 
-    //   {
-    //     headers: {"content-type": 'application/json', "Authorization": `Bearer ${token}`}
-    //   }
-    // ).then((response) =>
-    //   response.json()
-    // );
-    // const response = await axios.get(`${baseUrl}/estaciones`, {
-    //   headers: {"Authorization" : `Bearer ${token}`}
-    // })  
     const response = await axios.get(`${baseUrl}/mesas`)
     return response.data
   };

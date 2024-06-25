@@ -2,16 +2,6 @@ import axios from "axios";
 import { baseUrl } from "./baseService";
 
 const getPedidos = async () => {
-    // return fetch("http://localhost:3001/api/estaciones", 
-    //   {
-    //     headers: {"content-type": 'application/json', "Authorization": `Bearer ${token}`}
-    //   }
-    // ).then((response) =>
-    //   response.json()
-    // );
-    // const response = await axios.get(`${baseUrl}/estaciones`, {
-    //   headers: {"Authorization" : `Bearer ${token}`}
-    // })  
     const response = await axios.get(`${baseUrl}/pedidos`)
     return response.data
 }
@@ -31,8 +21,8 @@ const deletePedido = async (id) => {
     return response.data
 }
 
-const updatePedido = async (data) => {
-    const response = await axios.put(`${baseUrl}/pedidos/${data.idPedido}`, data);
+const updatePedido = async (id, data) => {
+    const response = await axios.put(`${baseUrl}/pedidos/${id}`, data);
     return response.data
 }
   

@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import reservaService from '../../services/reservaService';
 import { useEffect, useState } from 'react';
 import { setToken } from '../../services/baseService';
+import Swal from 'sweetalert2';
 
 
 
@@ -30,12 +31,18 @@ export const CreateReserva = () => {
     const onSubmit = async (data) => {
         try {
           const req = {
-            fechaHora: data.date,
+            fechaHora: `${data.date}T${data.time}:00.000Z`,
             nroPersonas: data.personas,
             idMesa: data.mesa
           };
           await reservaService.createReserva(req);
-          window.alert("Reserva creada con exito");
+          Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "Reserva creada con exito!",
+            showConfirmButton: false,
+            timer: 1500
+          });
           navigate("/home"); 
         } catch (error) {
             if (error.response) {
@@ -70,9 +77,9 @@ export const CreateReserva = () => {
                 </div>
             )}
             <div className="card-body">
-            <h1>CREAR RESERVA</h1>
+            <h1 className='mb-3'>CREAR RESERVA</h1>
                 <form id="login" onSubmit={handleSubmit(onSubmit)}>
-                    <div className="m-5 mb-4">
+                    <div className="m-2">
                         <label htmlFor="personas" className="form-label">Mesa</label>
                         <input
                             type="text"
@@ -82,19 +89,24 @@ export const CreateReserva = () => {
                             {...register('mesa', { required: true })}
                         />
                         {errors.mesa && <div className="invalid-feedback">Por favor, seleccione una mesa</div>}
-                        <button onClick={() => navigate("/mesas/create/none")} className="btn btn-primary">Seleccionar mesa</button>
+                        <button onClick={() => navigate("/mesas/create/none")} className="btn btn-outline-primary my-2">Seleccionar mesa</button>
                     </div>
-                    <div className="m-5">
+                    <div className='m-2'>
                     <label htmlFor="date" className="form-label">Fecha</label>
                     <input type="date"  id="date" name="date" className={`form-control m-2 ${errors.date ? 'is-invalid' : ''}`} autoComplete="date" {...register('date', { required: true })}/>
                     {errors.date && <div className="invalid-feedback">Por favor, ingrese una fecha</div>}
                     </div>
-                    <div className="m-5 mb-4">
+                    <div className='m-2'>
+                    <label htmlFor="time" className="form-label">Hora</label>
+                    <input type="time"  id="time" className={`form-control m-2 ${errors.time ? 'is-invalid' : ''}`} autoComplete="time" {...register('time', { required: true })}/>
+                    {errors.time && <div className="invalid-feedback">Por favor, ingrese una hora</div>}
+                    </div>
+                    <div className="m-2">
                     <label htmlFor="personas" className="form-label">Cantidad de Personas</label>
                     <input type="number" id="personas" name="personas" className={`form-control m-2 ${errors.personas ? 'is-invalid' : ''}`} placeholder="Ingrese la cantidad de personas" autoComplete="personas" {...register("personas", { required: true })}/>
                     {errors.personas && <div className="invalid-feedback">Por favor, ingrese la cantidad de personas</div>}
                     </div>
-                    <button type="submit" className="btn btn-success">Crear</button>
+                    <button type="submit" className="btn btn-success mt-2">Crear</button>
                 </form>
             </div>
             <div className="card-footer text-body-secondary bg-body-secondary py-3"> 

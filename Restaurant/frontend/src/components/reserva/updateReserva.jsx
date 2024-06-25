@@ -1,8 +1,10 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useForm } from 'react-hook-form';
 import { useLocation, Link, useNavigate, useParams } from 'react-router-dom';
 import reservaService from '../../services/reservaService';
 import { useEffect, useState } from 'react';
 import { setToken } from '../../services/baseService';
+import Swal from 'sweetalert2';
 
 export const UpdateReserva = () => {
 
@@ -12,7 +14,7 @@ export const UpdateReserva = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const {idReserva} = useParams();
-    const mesaSeleccionada = location.state?.mesaSeleccionada;
+    const [mesaSeleccionada] = useState(location.state?.mesaSeleccionada || null);
 
     const fetchReserva = async (id) => {
       const reserva = await reservaService.getReservaById(id);
@@ -31,19 +33,24 @@ export const UpdateReserva = () => {
         }else{
             navigate("/login");  
         }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
       }, [navigate, idReserva]);
 
     const onSubmit = async (data) => {
       console.log(data)
         try {
           const req = {
-            idMesa: data.mesa,
+            idMesa: mesaSeleccionada?.idMesa || reserva.idMesa,
             fechaHora: data.date,
             nroPersonas: data.personas
           }
           await reservaService.updateReserva(idReserva, req);
-          window.alert("Reserva actualizada con exito");
+          Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "Reserva actualizada con exito!",
+            showConfirmButton: false,
+            timer: 1500
+          });
           navigate(`/reserva/${idReserva}`); 
         } catch (error) {
             if (error.response) {
@@ -52,7 +59,6 @@ export const UpdateReserva = () => {
                 setErrorMessage("Error al actualizar la reserva");
             }
             console.error("Error al actualizar reserva:", error.error);
-            console.log(data)
           }
     }
 
@@ -80,11 +86,10 @@ export const UpdateReserva = () => {
                         <input
                             type="text"
                             className={`form-control m-2 ${errors.mesa ? 'is-invalid' : ''} ${mesaSeleccionada ? "border border-dark" : ""}`}
-                            value={mesaSeleccionada ? mesaSeleccionada.idMesa : reserva.idMesa}
                             readOnly
                             {...register('mesa', { required: false })}
                         />
-                        <button onClick={() => navigate(`/mesas/update/${idReserva}`)} className="btn btn-primary mt-3">Seleccionar mesa</button>
+                        <button onClick={() => navigate(`/mesas/update/${idReserva}`)} className="btn btn-outline-primary mt-3">Seleccionar mesa</button>
                     </div>
                     <div className="m-5">
                     <label htmlFor="date" className="form-label">Fecha</label>

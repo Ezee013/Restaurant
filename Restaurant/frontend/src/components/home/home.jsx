@@ -6,12 +6,18 @@ import { useEffect, useState } from "react";
 export const Home = () => {
 
     const [reservas, setReservas] = useState([]);
+    const [activas, setActivas] = useState(true);
 
     const navigate = useNavigate();
 
-    const fetchReservas = async () => {
-        reservaService.getReservas().then((data) => setReservas(data))
+    const fetchReservas = async (active) => {
+        if (active) {
+            await reservaService.getReservasActivas().then((data) => setReservas(data))
+                .catch(error => console.error(error));
+        } else {
+            await reservaService.getReservas().then((data) => setReservas(data))
             .catch(error => console.error(error));
+        }
     }
 
     useEffect(() => {
@@ -19,28 +25,33 @@ export const Home = () => {
         if (loggedUser) {
           const { token } = JSON.parse(loggedUser);
           setToken(token);
-          fetchReservas();
+          fetchReservas(activas);
         }else{
             navigate("/login");  
         }      
-      },[navigate]);
+      },[navigate, activas]);
 
     return (
         <div className="card text-center m-4">
             <div className="card-header d-flex justify-content-around pt-3">
                 <ul className="nav nav-tabs card-header-tabs">
                     <li className="nav-item">
-                        <a className="nav-link active" aria-current="true" href="#">Activas</a>
+                        <a className={`nav-link ${activas ? "active" : ""}`} onClick={() => {setActivas(true)}} aria-current="true" href="#">Activas</a>
                     </li>
                     <li className="nav-item">
-                        <a className="nav-link" aria-disabled="true">Historial</a>
+                        <a className={`nav-link ${activas ? "" : "active"}`} onClick={() => {setActivas(false)}} aria-disabled="true">Historial</a>
                     </li>
                 </ul>
                 <button onClick={() => navigate("/reserva/create")} className="btn btn-outline-success">Crear reserva</button>
                 
             </div>
             <div className="card-body row row-cols-1 row-cols-md-3 g-4 " >
-                {reservas.map((reserva) => (
+                {!reservas.length ? (activas ? <h2 className="m-auto pt-4 text-black-50">No tienes reservas activas</h2> : <h2 className="m-auto pt-4 text-black-50">Aun no tienes reservas</h2>) : ""}
+                {reservas.map((reserva) => {
+                    const date = new Date(reserva.fechaHora);
+                    const formattedDateTime = `${date.toUTCString([], { hour: '2-digit', minute: '2-digit' })}`;
+
+                    return (
                     <div className="col-4 " key={reserva.idReserva}>
                         <div className="card text-center">
                             <div className="card-header bg-body-secondary">
@@ -54,11 +65,12 @@ export const Home = () => {
                                 <button onClick={() => navigate(`/reserva/${reserva.idReserva}`)} className="btn btn-outline-primary">Ver reserva</button>
                             </div>
                             <div className="card-footer text-body-secondary bg-body-secondary">
-                                Fecha: {reserva.fechaHora}
+                                {formattedDateTime}
                             </div>
                         </div>
                     </div>
-                ))}
+                );
+            })}
             </div>
         </div>
     )

@@ -13,6 +13,10 @@ const ERROR_HANDLER = {
         error: error.message
     }),
 
+    SequelizeDatabaseError: (res, error) => res.status(500).send({
+        error: error.message
+    }),
+
     SyntaxError: (res, err) => res.status(500).send(err.message),
 
     "Validation error": (res, err) => res.status(500).send(err.name),

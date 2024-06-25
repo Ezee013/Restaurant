@@ -10,6 +10,8 @@ import { Registro } from './components/registro/registro.jsx';
 import { Mesa } from './components/mesa/mesa.jsx';
 import { Menu } from './components/menu/menu.jsx';
 import { UpdateReserva } from './components/reserva/updateReserva.jsx';
+import { UpdatePedido } from './components/pedido/updatePedido.jsx';
+import NotFound from './components/notFound/notFound.jsx';
 
 function App() {
   return (
@@ -22,13 +24,15 @@ function App() {
             <Route path="/home" element={<Home />} />
             <Route path="/reserva/:id" element={<Reserva />} />
             <Route path="/mesas/:mode/:idReserva" element={<Mesa />} />
-            <Route path="/menus/:idReserva" element={<Menu />} />
+            <Route path="/menus/:mode/:idReserva/:idPedido" element={<Menu />} />
           </Route>
 
           <Route path="/reserva/create" element={<CreateReserva />} />
           <Route path="/reserva/update/:idReserva" element={<UpdateReserva />} />
           <Route path="/pedido/create/:idReserva" element={<CreatePedido />} />
+          <Route path="/pedido/update/:idReserva/:idPedido" element={<UpdatePedido />} />
           
+          <Route path="*" element={<NotFound />} />
 
         </Routes>
       </BrowserRouter>
