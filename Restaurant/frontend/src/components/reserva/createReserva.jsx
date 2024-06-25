@@ -61,7 +61,7 @@ export const CreateReserva = () => {
         };
 
     return (
-      <div className="d-flex justify-content-center align-items-center vh-100 bg-dark">
+      <div className="d-flex justify-content-center align-items-center bg-dark" style={{height: '100%'}}>
         <div className="card text-center border border-3" style={{width: '70%'}}>
           <div className="card-header bg-secondary" >
             <div className='mx-5'>

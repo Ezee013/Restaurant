@@ -15,7 +15,6 @@ import NotFound from './components/notFound/notFound.jsx';
 
 function App() {
   return (
-    <div className='App'>
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login />} />
@@ -36,7 +35,6 @@ function App() {
 
         </Routes>
       </BrowserRouter>
-    </div>
   )
 }
 
