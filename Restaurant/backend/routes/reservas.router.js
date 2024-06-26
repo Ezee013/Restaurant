@@ -1,15 +1,17 @@
 import appExpress from "express";
-import { getReservas, getReservaById, createReserva, updateReserva, deleteReserva, getReservasActivas, verificarActivas } from "../services/reservas.service.js";
+import { getReservas, getReservaById, createReserva, updateReserva, deleteReserva, getReservasActivas, verificarActivas, getReservasByCliente } from "../services/reservas.service.js";
 import Mesa from "../models/mesas.js";
 const reservasRouter = appExpress.Router();
 
 reservasRouter.get("/", async (req ,res, next) => {
     try {
-        // realizo la consulta a la base de datos.
-        const reservas = await getReservas(req.idCliente);
-
-        // envío la respuesta con el resultado de la consulta.
-        res.json(reservas);
+        if (req.idCliente === 1) {
+            const reservasAdmin = await getReservas();
+            res.json(reservasAdmin);
+        } else {
+            const reservas = await getReservasByCliente(req.idCliente);
+            res.json(reservas);
+        }       
     }
     catch (error) {
         console.log(error);
@@ -24,8 +26,13 @@ reservasRouter.get("/active", async (req ,res, next) => {
 
         await verificarActivas();
 
-        const reservas = await getReservasActivas(req.idCliente);
-        res.json(reservas);
+        if (req.idCliente === 1) {
+            const reservasAdmin = await getReservas();
+            res.json(reservasAdmin);
+        } else {
+            const reservas = await getReservasActivas(req.idCliente);
+            res.json(reservas);
+        }
     }
     catch (error) {
         console.log(error);

@@ -26,8 +26,8 @@ const deleteMenu = async (id) => {
     return response.data
 }
 
-const updateMenu = async (data) => {
-    const response = await axios.put(`${baseUrl}/menus/${data.idMenu}`, data);
+const updateMenu = async (id, data) => {
+    const response = await axios.put(`${baseUrl}/menus/${id}`, data);
     return response.data
 }
   

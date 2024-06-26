@@ -16,8 +16,8 @@ const deleteMesa = async (id) => {
     return response.data
 }
 
-const updateMesa = async (data) => {
-    const response = await axios.put(`${baseUrl}/mesas/${data.idMesa}`, data)
+const updateMesa = async (id, data) => {
+    const response = await axios.put(`${baseUrl}/mesas/${id}`, data)
     return response.data
 }
   

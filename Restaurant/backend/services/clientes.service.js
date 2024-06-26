@@ -53,6 +53,9 @@ export async function updateCliente(idCliente, nombre, apellido, mail){
 
 export async function updateCliente(id, data){
     await getClienteById(id);
+    
+    if (data.password) data.password = await bcrypt.hash(data.password, SALTROUNDS);
+
     return Cliente.update(data, { where: {idCliente: id} });
 };
 

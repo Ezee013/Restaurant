@@ -84,7 +84,7 @@ export const UpdatePedido = () => {
         )}
         <div className="card-body">
           <h1>EDITAR PEDIDO</h1> 
-          <form id="login" onSubmit={handleSubmit(onSubmit)}>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <div className="m-5 mb-4">
                 <label htmlFor="menu" className="form-label">Menu</label>
                 <input
@@ -95,19 +95,17 @@ export const UpdatePedido = () => {
                     readOnly
                     {...register('menu', { required: true })}
                 />
-                {errors.menu && <div className="invalid-feedback">Por favor, seleccione un menu</div>}
                 <button onClick={() => navigate(`/menus/update/${idReserva}/${idPedido}`)} className="btn btn-outline-primary mt-2">Seleccionar menu</button>
             </div>
             <div className="m-5 mb-4">
               <label htmlFor="cantidad" className="form-label">Cantidad</label>
               <input type="number" id="cantidad" className={`form-control m-2 ${errors.cantidad ? 'is-invalid' : ''}`} placeholder="Ingrese la cantidad de menus" autoComplete="cantidad" {...register("cantidad", { required: true })}/>
-              {errors.cantidad && <div className="invalid-feedback">Por favor, ingrese la cantidad de Menus</div>}
             </div>
             <button type="submit" className="btn btn-success">Actualizar</button>
           </form>
         </div>
         <div className="card-footer text-body-secondary py-3 bg-body-secondary"> 
-          <Link to={`/reserva/${idReserva}`} >No quiero actualizar el pedido</Link>
+          <Link to={`/reserva/${idReserva}`} >¡No quiero actualizar el pedido!</Link>
         </div>
       </div>
     </div>

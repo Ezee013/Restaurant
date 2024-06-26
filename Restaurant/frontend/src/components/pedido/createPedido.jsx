@@ -55,7 +55,7 @@ export const CreatePedido = () => {
         }else{
             navigate("/login");  
         }
-        }, [menuSeleccionado, navigate]);
+        }, [navigate]);
 
   return (
     <div className="d-flex justify-content-center align-items-center bg-dark" style={{height: '100%'}}>
@@ -75,7 +75,7 @@ export const CreatePedido = () => {
         )}
         <div className="card-body">
           <h1>CREAR PEDIDO</h1> 
-          <form id="login" onSubmit={handleSubmit(onSubmit)}>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <div className="m-5 mb-4">
                 <label htmlFor="menu" className="form-label">Menu</label>
                 <input
@@ -84,6 +84,7 @@ export const CreatePedido = () => {
                     className={`form-control m-2 ${errors.menu ? 'is-invalid' : ''} ${menuSeleccionado ? "border border-primary" : ""}`}
                     value={menuSeleccionado ? menuSeleccionado.idMenu : ''}
                     readOnly
+                    placeholder='Seleccione un menu'
                     {...register('menu', { required: true })}
                 />
                 {errors.menu && <div className="invalid-feedback">Por favor, seleccione un menu</div>}
@@ -98,7 +99,7 @@ export const CreatePedido = () => {
           </form>
         </div>
         <div className="card-footer text-body-secondary py-3 bg-body-secondary"> 
-          <Link to={`/reserva/${idReserva}`} >No quiero hacer un pedido</Link>
+          <Link to={`/reserva/${idReserva}`} >¡No quiero hacer un pedido!</Link>
         </div>
       </div>
     </div>

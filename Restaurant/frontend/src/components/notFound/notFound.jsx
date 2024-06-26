@@ -5,7 +5,7 @@ const NotFound = () => {
     <div className="not-found" style={{ backgroundColor: "darkgray", minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <div className="not-found-container" style={{ maxWidth: '800px', padding: '20px', background: '#fff', borderRadius: '10px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
         <div className="not-found-image m-auto" style={{ width: '60%'}}>
-          <img src="../src/assets/page-not-found.jpg" alt="Page Not Found" className="img-fluid" />
+          <img src="/src/assets/page-not-found.jpg" alt="Page Not Found" className="img-fluid" />
         </div>
         <div className="not-found-content" style={{ textAlign: 'center' }}>
           <h1 style={{ fontSize: '2.5rem', marginBottom: '15px' }}>Oh no! No pudimos encontrar la pagina que buscabas.</h1>

@@ -35,8 +35,7 @@ export const UpdateReserva = () => {
         }
       }, [navigate, idReserva]);
 
-    const onSubmit = async (data) => {
-      console.log(data)
+    const onSubmit = async (data) => {  
         try {
           const req = {
             idMesa: mesaSeleccionada?.idMesa || reserva.idMesa,
@@ -80,7 +79,7 @@ export const UpdateReserva = () => {
             )}
             <div className="card-body">
             <h1>ACTUALIZAR RESERVA</h1>
-                <form id="login" onSubmit={handleSubmit(onSubmit)}>
+                <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="m-5 mb-4">
                         <label htmlFor="personas" className="form-label">Mesa</label>
                         <input
@@ -103,7 +102,7 @@ export const UpdateReserva = () => {
                 </form>
             </div>
             <div className="card-footer text-body-secondary bg-body-secondary py-3"> 
-                <Link to={`/reserva/${idReserva}`}>No quiero actualizar la reserva</Link>
+                <Link to={`/reserva/${idReserva}`}>¡No quiero actualizar la reserva!</Link>
             </div>
         </div>
       </div>

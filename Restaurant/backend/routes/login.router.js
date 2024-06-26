@@ -22,6 +22,7 @@ loginRouter.post("/login", async (req, res, next) => {
     try {
         const cliente = await checkClientePassword(userName,password);
         res.json({
+            id: cliente.idCliente,
             userName: cliente.mail,
             nombre: `${cliente.nombre} ${cliente.apellido}`,
             token: generarJwt(cliente)

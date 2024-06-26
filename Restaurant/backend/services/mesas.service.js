@@ -6,10 +6,10 @@ export async function getMesas(){
 };
 
 export async function getMesaById(id){
+    const mesa = await Mesa.findByPk(id);
     if (!mesa) {
         throw new Error("cannotGet");
         };
-    const mesa = await Mesa.findByPk(id);
     return mesa;
 };
 

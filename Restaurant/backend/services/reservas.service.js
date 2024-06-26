@@ -2,7 +2,7 @@ import Cliente from "../models/clientes.js";
 import Mesa from "../models/mesas.js";
 import Reserva from "../models/reservas.js";
 
-export async function getReservas(idCliente){
+export async function getReservasByCliente(idCliente){
     const reservas = await Reserva.findAll({
         include: [
             {
@@ -14,6 +14,26 @@ export async function getReservas(idCliente){
         where: {idCliente: idCliente},
         order:  [['fechaHora', 'DESC']]
         //limit: 5
+    }
+    );
+    return reservas;
+};
+
+export async function getReservas(){
+    const reservas = await Reserva.findAll({
+        include: [
+            {
+                model: Mesa,
+                as: "mesa",
+                required: true  
+            },
+            {
+                model: Cliente,
+                as: "cliente",
+                required: true
+            }
+        ],
+        order:  [['fechaHora', 'DESC']]
     }
     );
     return reservas;

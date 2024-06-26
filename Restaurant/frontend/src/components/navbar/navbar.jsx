@@ -5,16 +5,12 @@ export const Navbar = () => {
     const [user, setUser] = useState('');
     const [hover, setHover] = useState(false);
     const navigate = useNavigate();
-
-    const checkUser = () => {
+    
+    useEffect(() => {
         const userFromStorage = localStorage.getItem('LogedUser');
         if (userFromStorage) {
             setUser(JSON.parse(userFromStorage));
         }
-    }   
-    
-    useEffect(() => {
-        checkUser();
     }, []);
 
     const handleLogOut = () => {

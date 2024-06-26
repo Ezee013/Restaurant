@@ -78,13 +78,14 @@ export const CreateReserva = () => {
             )}
             <div className="card-body">
             <h1 className='mb-3'>CREAR RESERVA</h1>
-                <form id="login" onSubmit={handleSubmit(onSubmit)}>
+                <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="m-2">
                         <label htmlFor="personas" className="form-label">Mesa</label>
                         <input
                             type="text"
                             className={`form-control m-2 ${errors.mesa ? 'is-invalid' : ''} ${mesaSeleccionada ? "border border-primary" : ""}`}
                             value={mesaSeleccionada ? mesaSeleccionada.idMesa : ''}
+                            placeholder='Seleccione una mesa'
                             readOnly
                             {...register('mesa', { required: true })}
                         />
@@ -110,7 +111,7 @@ export const CreateReserva = () => {
                 </form>
             </div>
             <div className="card-footer text-body-secondary bg-body-secondary py-3"> 
-                <Link to="/home">No quiero hacer una reserva</Link>
+                <Link to="/home">¡No quiero hacer una reserva!</Link>
             </div>
         </div>
       </div>

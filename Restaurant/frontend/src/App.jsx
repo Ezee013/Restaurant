@@ -12,6 +12,13 @@ import { Menu } from './components/menu/menu.jsx';
 import { UpdateReserva } from './components/reserva/updateReserva.jsx';
 import { UpdatePedido } from './components/pedido/updatePedido.jsx';
 import NotFound from './components/notFound/notFound.jsx';
+import { Footer } from './components/footer/footer.jsx';
+import { UpdateCliente } from './components/cliente/updateCliente.jsx';
+import { CreateMenu } from './components/menu/createMenu.jsx';
+import { Categoria } from './components/categoria/categoria.jsx';
+import { UpdateMenu } from './components/menu/updateMenu.jsx';
+import { CreateMesa } from './components/mesa/createMesa.jsx';
+import { UpdateMesa } from './components/mesa/updateMesa.jsx';
 
 function App() {
   return (
@@ -24,12 +31,18 @@ function App() {
             <Route path="/reserva/:id" element={<Reserva />} />
             <Route path="/mesas/:mode/:idReserva" element={<Mesa />} />
             <Route path="/menus/:mode/:idReserva/:idPedido" element={<Menu />} />
+            <Route path="/categorias/:mode/:idMenu" element={<Categoria />} />
           </Route>
 
           <Route path="/reserva/create" element={<CreateReserva />} />
           <Route path="/reserva/update/:idReserva" element={<UpdateReserva />} />
           <Route path="/pedido/create/:idReserva" element={<CreatePedido />} />
           <Route path="/pedido/update/:idReserva/:idPedido" element={<UpdatePedido />} />
+          <Route path="/usuario/update" element={<UpdateCliente />} />
+          <Route path="/menu/create" element={<CreateMenu />} />
+          <Route path="/menu/update/:idMenu" element={<UpdateMenu />} />
+          <Route path="/mesa/create" element={<CreateMesa />} />
+          <Route path="/mesa/update/:idMesa" element={<UpdateMesa />} />
           
           <Route path="*" element={<NotFound />} />
 
@@ -43,6 +56,7 @@ function LayoutWithNavbar() {
     <>
       <Navbar />
       <Outlet />
+      <Footer />
     </>
   );
 }

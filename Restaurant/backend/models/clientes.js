@@ -23,7 +23,6 @@ const Cliente = sequelize.define("Cliente", {
         allowNull: false,
         unique: true,
         field: "MAIL",
-        unique: true,
         validate: {
             isEmail: {
                 msg: 'El correo electrónico no tiene un formato válido.'
