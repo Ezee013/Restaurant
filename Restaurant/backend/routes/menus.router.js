@@ -35,18 +35,28 @@ menusRouter.get("/:id", async (req ,res, next) => {
 });
 
 menusRouter.post("/", async (req, res, next) => {
+    const {precio} = req.body;
     try {
-        const menu = await createMenu(req.body);
-        res.status(201).json(menu);
+        if (precio < 0){
+            res.status(409).json({ error: "No puede tener un valor negativo" });
+        } else {
+            const menu = await createMenu(req.body);
+            res.status(201).json(menu);
+        }
     } catch (error) {
         next(error);
     }
 });
 
 menusRouter.put("/:id", async (req, res, next) => {
+    const {precio} = req.body;
     try {
-        await updateMenu(req.params.id, req.body);
-        res.status(200).json({res : "Menu actualizado con exito"});
+        if (precio < 0){
+            res.status(409).json({ error: "No puede tener un valor negativo" });
+        }else {
+            await updateMenu(req.params.id, req.body);
+            res.status(200).json({res : "Menu actualizado con exito"});
+        } 
     } catch (error) {
         next(error);
     }

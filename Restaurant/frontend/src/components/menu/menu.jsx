@@ -44,6 +44,7 @@ export const Menu = () => {
                 }));
                 navigate("/menus/admin/none/none")
             }
+            window.location.reload()
           });
     }
 

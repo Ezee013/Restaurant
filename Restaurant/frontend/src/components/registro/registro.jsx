@@ -81,12 +81,15 @@ export const Registro = () => {
             </div>
             <div className="m-4">
               <label htmlFor="lastName" className="form-label">Apellido</label>
-              <input type="lastName" id="lastName" name="password" className={`form-control ${errors.password ? 'is-invalid' : ''}`} placeholder="Apellido" autoComplete="lastName" {...register("lastName", { required: true })}/>
+              <input type="lastName" id="lastName" className={`form-control ${errors.lastName ? 'is-invalid' : ''}`} placeholder="Apellido" autoComplete="lastName" {...register("lastName", { required: true })}/>
               {errors.lastName && <div className="invalid-feedback">Por favor, ingrese su apellido</div>}
             </div>
             <div className="m-4">
               <label htmlFor="email" className="form-label">Email</label>
-              <input type="email"  id="email" name="email" className={`form-control m-2 ${errors.email ? 'is-invalid' : ''}`} aria-describedby="emailHelp" placeholder="Correo electronico" autoComplete="email" {...register('email', { required: true, pattern: {
+              <input type="email"  id="email" name="email" className={`form-control m-2 ${errors.email ? 'is-invalid' : ''}`} aria-describedby="emailHelp" placeholder="Correo electronico" autoComplete="email"
+              {...register('email', { 
+                required: 'El email es obligatorio',
+                        pattern: {
                           value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
                           message: 'El email no es válido'
                         }
@@ -96,7 +99,14 @@ export const Registro = () => {
             </div>
             <div className="m-4">
               <label htmlFor="password" className="form-label">Contraseña</label>
-              <input type="password" id="password" name="password" className={`form-control m-2 ${errors.password ? 'is-invalid' : ''}`} placeholder="Contraseña" autoComplete="current-password" {...register("password", { required: true })}/>
+              <input type="password" id="password" name="password" className={`form-control m-2 ${errors.password ? 'is-invalid' : ''}`} placeholder="Contraseña" autoComplete="current-password" 
+              {...register('password', {
+                required: 'La contraseña es obligatoria',
+                minLength: {
+                  value: 8,
+                  message: 'La contraseña debe tener al menos 8 caracteres'
+                }
+              })}/>
               {errors.password && <div className="invalid-feedback">Por favor, ingrese una contraseña</div>}
             </div>
             <button type="submit" className="btn btn-primary">Registrarme</button>

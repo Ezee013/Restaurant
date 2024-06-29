@@ -22,7 +22,15 @@ export async function getMenusFiltered(filtro){
 };
 
 export async function getMenuById(id){
-    const menu = await Menu.findByPk(id);
+    const menu = await Menu.findByPk(id, {
+        include: [
+            {
+                model: Categoria,
+                as: "categoria",
+                required: true
+            }
+        ]
+    });
     if (!menu) {
         throw new Error("cannotGet");
         };

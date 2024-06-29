@@ -26,9 +26,10 @@ export const CreateMenu = () => {
         }, [navigate]);
 
     const onSubmit = async (data) => {
+      if (data.price < 0) return window.alert("El valor no puede ser negativo");  
         try {
           const req = {
-            idCategoria: data.category,
+            idCategoria: categoriaSeleccionada.idCategoria,
             nombre: data.name,
             descripcion: data.description,
             precio: data.price
@@ -82,7 +83,7 @@ export const CreateMenu = () => {
                         <input
                             type="text"
                             className={`form-control m-2 ${errors.category ? 'is-invalid' : ''} ${categoriaSeleccionada ? "border border-primary" : ""}`}
-                            value={categoriaSeleccionada ? categoriaSeleccionada.idCategoria : ''}
+                            value={categoriaSeleccionada ? categoriaSeleccionada.nombre : ''}
                             readOnly
                             placeholder="Ingrese la categoria"
                             {...register('category', { required: true })}

@@ -16,6 +16,7 @@ const Menu = sequelize.define("Menu", {
     nombre: {
         type: DataTypes.STRING(100),
         allowNull: false,
+        unique: true,
         field: "NOMBRE"
     },
     descripcion: {

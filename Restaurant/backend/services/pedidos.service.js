@@ -41,7 +41,15 @@ export async function getPedidosByReserva(idReserva){
 };
 
 export async function getPedidoById(id){    
-    const pedido = await Pedido.findByPk(id);
+    const pedido = await Pedido.findByPk(id, {
+        include: [
+            {
+                model: Menu,
+                as: "menu",
+                required: true
+            }
+        ]
+    });
     if (!pedido) {
         throw new Error("cannotGet");
         };

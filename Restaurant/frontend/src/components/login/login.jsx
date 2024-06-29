@@ -22,7 +22,7 @@ export const Login = () => {
     try {
       const login = {
         userName: data.username,
-        password: data.password
+        password: data.password 
       };
 
       const response = await loginService.doLogin(login);

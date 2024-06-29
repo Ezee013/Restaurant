@@ -29,11 +29,12 @@ export const CreateReserva = () => {
         }, [mesaSeleccionada, setValue, navigate]);
 
     const onSubmit = async (data) => {
+      if (data.personas < 0) return window.alert("El valor no puede ser negativo");  
         try {
           const req = {
             fechaHora: `${data.date}T${data.time}:00.000Z`,
             nroPersonas: data.personas,
-            idMesa: data.mesa
+            idMesa: mesaSeleccionada.idMesa
           };
           await reservaService.createReserva(req);
           Swal.fire({
@@ -84,7 +85,7 @@ export const CreateReserva = () => {
                         <input
                             type="text"
                             className={`form-control m-2 ${errors.mesa ? 'is-invalid' : ''} ${mesaSeleccionada ? "border border-primary" : ""}`}
-                            value={mesaSeleccionada ? mesaSeleccionada.idMesa : ''}
+                            value={mesaSeleccionada ? mesaSeleccionada.numero : ''}
                             placeholder='Seleccione una mesa'
                             readOnly
                             {...register('mesa', { required: true })}
@@ -104,7 +105,7 @@ export const CreateReserva = () => {
                     </div>
                     <div className="m-2">
                     <label htmlFor="personas" className="form-label">Cantidad de Personas</label>
-                    <input type="number" id="personas" name="personas" className={`form-control m-2 ${errors.personas ? 'is-invalid' : ''}`} placeholder="Ingrese la cantidad de personas" autoComplete="personas" {...register("personas", { required: true })}/>
+                    <input type="number" id="personas" min="0" name="personas" className={`form-control m-2 ${errors.personas ? 'is-invalid' : ''}`} placeholder="Ingrese la cantidad de personas" autoComplete="personas" {...register("personas", { required: true })}/>
                     {errors.personas && <div className="invalid-feedback">Por favor, ingrese la cantidad de personas</div>}
                     </div>
                     <button type="submit" className="btn btn-success mt-2">Crear</button>

@@ -1,7 +1,7 @@
 import appExpress from "express";
 import { getPedidos, getPedidoById, createPedido, updatePedido, deletePedido, getPedidosByReserva} from "../services/pedidos.service.js";
-import Menu from "../models/menus.js";
 import Reserva from "../models/reservas.js";
+import Menu from "../models/menus.js";
 
 const pedidosRouter = appExpress.Router();
 
@@ -47,6 +47,8 @@ pedidosRouter.get("/:id", async (req ,res, next) => {
 pedidosRouter.post("/", async (req, res, next) => {
     const {idReserva, idMenu, cantidad} = req.body;
 
+    if (cantidad < 0) return res.status(409).json({ error: "No puede tener un valor negativo" });
+
     const menu = await Menu.findByPk(idMenu);
     if (!menu) return res.status(404).json({ error: 'El menú asociado al pedido no existe' });
 
@@ -65,6 +67,15 @@ pedidosRouter.post("/", async (req, res, next) => {
 });
 
 pedidosRouter.put("/:id", async (req, res, next) => {
+    const {cantidad, idMenu} = req.body;
+
+    if (cantidad < 0) return res.status(409).json({ error: "No puede tener un valor negativo" });
+        
+    const menu = await Menu.findByPk(idMenu);
+    if (!menu) return res.status(404).json({ error: 'El menú asociado al pedido no existe' });
+
+    req.body.precioTotal = menu.precio * cantidad;
+
     try {
         await updatePedido(req.params.id, req.body);
         res.status(200).json({res : "Pedido actualizado con exito"});

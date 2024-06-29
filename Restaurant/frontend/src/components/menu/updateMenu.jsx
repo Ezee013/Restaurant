@@ -11,18 +11,19 @@ export const UpdateMenu = () => {
 
     const { register, handleSubmit, setValue, formState: { errors } } = useForm();
     const [errorMessage, setErrorMessage] = useState('');
-    const [categoria, setCategoria] = useState('');
+    const [menu, setMenu] = useState('');
     const navigate = useNavigate();
     const location = useLocation();
     const categoriaSeleccionada = location.state?.categoriaSeleccionada;
     const {idMenu} = useParams();
 
     const fetchMenu = async (id) => {
-        const categoria = await menuService.getMenuById(id);
-        setCategoria(categoria);
-        setValue('name', categoria.nombre);
-        setValue('description', categoria.descripcion);
-        setValue('price', categoria.precio);
+        const menu = await menuService.getMenuById(id);
+        setMenu(menu);
+        setValue('category', menu.categoria.nombre);
+        setValue('name', menu.nombre);
+        setValue('description', menu.descripcion);
+        setValue('price', menu.precio);
     }
 
     useEffect(() => {
@@ -38,9 +39,10 @@ export const UpdateMenu = () => {
         }, [idMenu, navigate]);
 
     const onSubmit = async (data) => {
+      if (data.price < 0) return window.alert("El valor no puede ser negativo");  
         try {
           const req = {
-            idCategoria: categoriaSeleccionada?.idCategoria || categoria.idCategoria,
+            idCategoria: categoriaSeleccionada?.idCategoria || menu.idCategoria,
             nombre: data.name,
             descripcion: data.description,
             precio: data.price
@@ -95,7 +97,7 @@ export const UpdateMenu = () => {
                             type="text"
                             className={`form-control m-2 ${errors.category ? 'is-invalid' : ''} ${categoriaSeleccionada ? "border border-primary" : ""}`}
                             readOnly
-                            value={categoriaSeleccionada ? categoriaSeleccionada.idCategoria : categoria.idCategoria}
+                            value={categoriaSeleccionada ? categoriaSeleccionada.nombre : (menu.categoria ? menu.categoria.nombre : "")}
                             placeholder="Ingrese la categoria"
                             {...register('category', { required: false })}
                         />

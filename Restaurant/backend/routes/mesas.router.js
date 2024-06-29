@@ -31,24 +31,38 @@ mesasRouter.get("/:id", async (req ,res, next) => {
     }
 });
 
+
 mesasRouter.post("/", async (req, res, next) => {
+    const {numero, capacidad} = req.body;
     try {
-        const mesa = await createMesa(req.body);
-        res.status(201).json(mesa);
+
+        if(numero < 0 || capacidad < 0){
+            res.status(409).json({ error: "No puede tener un valor negativo" });
+        } else {
+            const mesa = await createMesa(req.body);
+            res.status(201).json(mesa);
+        }
     } catch (error) {
         next(error);
     }
 });
 
 mesasRouter.put("/:id", async (req, res, next) => {
+    const {numero, capacidad} = req.body;
     try {
-        await updateMesa(req.params.id, req.body);
-        res.status(200).json({ response: "Mesa actualizada con exito"});
+    
+        if(numero < 0 || capacidad < 0) {
+            res.status(409).json({ error: "No puede tener un valor negativo" });
+        }else {
+
+            await updateMesa(req.params.id, req.body);
+            res.status(200).json({ response: "Mesa actualizada con exito"});
+        }
+            
     } catch (error) {
         next(error);
     }
 });
-
 
 mesasRouter.delete("/:id", async (req, res, next) => {
     try {

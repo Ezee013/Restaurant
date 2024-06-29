@@ -21,7 +21,7 @@ export const UpdateReserva = () => {
       setReserva(reserva);
       setValue('date', reserva.fechaHora);
       setValue('personas', reserva.nroPersonas);
-      setValue('mesa', reserva.idMesa);
+      setValue('mesa', reserva.numero);
     }
 
     useEffect(() => {
@@ -36,6 +36,7 @@ export const UpdateReserva = () => {
       }, [navigate, idReserva]);
 
     const onSubmit = async (data) => {  
+      if (data.personas < 0) return window.alert("El valor no puede ser negativo");  
         try {
           const req = {
             idMesa: mesaSeleccionada?.idMesa || reserva.idMesa,
@@ -85,6 +86,7 @@ export const UpdateReserva = () => {
                         <input
                             type="text"
                             className={`form-control m-2 ${errors.mesa ? 'is-invalid' : ''} ${mesaSeleccionada ? "border border-dark" : ""}`}
+                            value={mesaSeleccionada ? mesaSeleccionada.numero : (reserva.mesa ? reserva.mesa.numero : "")}
                             readOnly
                             {...register('mesa', { required: false })}
                         />

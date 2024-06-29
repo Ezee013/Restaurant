@@ -1,6 +1,7 @@
 import appExpress from "express";
 import { getReservas, getReservaById, createReserva, updateReserva, deleteReserva, getReservasActivas, verificarActivas, getReservasByCliente } from "../services/reservas.service.js";
 import Mesa from "../models/mesas.js";
+
 const reservasRouter = appExpress.Router();
 
 reservasRouter.get("/", async (req ,res, next) => {
@@ -61,6 +62,8 @@ reservasRouter.post("/", async (req, res, next) => {
     const mesa = await Mesa.findByPk(idMesa);
     if (!mesa) return res.status(404).json({ error: 'La mesa asociada al pedido no existe' });
 
+    if(nroPersonas < 0) return res.status(409).json({error: "No puede tener un valor negativo"});
+    
     if(nroPersonas >= mesa.capacidad ) return res.status(409).json({res: "La cantidad de personas supera la capacidad de la mesa"});
     
     const fechaReserva = new Date(fechaHora);
@@ -78,10 +81,19 @@ reservasRouter.post("/", async (req, res, next) => {
 });
 
 reservasRouter.put("/:id", async (req, res, next) => {
-    const { idMesa, nroPersonas } = req.body;
+    const { idMesa, nroPersonas, fechaHora } = req.body;
+
     const mesa = await Mesa.findByPk(idMesa);
+    if (!mesa) return res.status(404).json({ error: 'La mesa asociada al pedido no existe' });
 
     if(nroPersonas >= mesa.capacidad ) return res.status(409).json({res: "La cantidad de personas supera la capacidad de la mesa"});
+
+    if(nroPersonas < 0) return res.status(409).json({error: "No puede tener un valor negativo"});
+
+    const fechaReserva = new Date(fechaHora);
+    const today = new Date();
+    const todayUTC = new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate(), today.getHours(), today.getMinutes(), today.getSeconds()));
+    if(fechaReserva < todayUTC) return res.status(409).json({res: "La fecha no puede ser anterior a hoy"});
 
     try {
         await updateReserva(req.params.id, req.body);

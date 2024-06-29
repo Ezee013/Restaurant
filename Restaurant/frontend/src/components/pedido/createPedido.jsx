@@ -16,10 +16,11 @@ export const CreatePedido = () => {
 
 
     const onSubmit = async (data) => {
+      if (data.cantidad < 0) return window.alert("El valor no puede ser negativo");  
       try {
         const req = {
           idReserva: idReserva,
-          idMenu: data.menu,
+          idMenu: menuSeleccionado.idMenu,
           cantidad: data.cantidad
         };
         await pedidoService.createPedido(req);
@@ -82,7 +83,7 @@ export const CreatePedido = () => {
                     id='menu'
                     type="text"
                     className={`form-control m-2 ${errors.menu ? 'is-invalid' : ''} ${menuSeleccionado ? "border border-primary" : ""}`}
-                    value={menuSeleccionado ? menuSeleccionado.idMenu : ''}
+                    value={menuSeleccionado ? menuSeleccionado.nombre : ''}
                     readOnly
                     placeholder='Seleccione un menu'
                     {...register('menu', { required: true })}
@@ -92,7 +93,7 @@ export const CreatePedido = () => {
             </div>
             <div className="m-5 mb-4">
               <label htmlFor="cantidad" className="form-label">Cantidad</label>
-              <input type="number" id="cantidad" className={`form-control m-2 ${errors.cantidad ? 'is-invalid' : ''}`} placeholder="Ingrese la cantidad de menus" autoComplete="cantidad" {...register("cantidad", { required: true })}/>
+              <input type="number" min="0" id="cantidad" className={`form-control m-2 ${errors.cantidad ? 'is-invalid' : ''}`} placeholder="Ingrese la cantidad de menus" autoComplete="cantidad" {...register("cantidad", { required: true })}/>
               {errors.cantidad && <div className="invalid-feedback">Por favor, ingrese la cantidad de Menus</div>}
             </div>
             <button type="submit" className="btn btn-outline-success">Crear</button>

@@ -24,11 +24,12 @@ export const CreateMesa = () => {
           setToken(token);
         }else{
             navigate("/login");  
-        }
+        } 
         }, [navigate]);
 
     const onSubmit = async (data) => {
-        try {
+      if (data.capacity < 0 || data.number < 0) return window.alert("El valor no puede ser negativo");  
+      try {
           const req = {
             numero: data.number,
             capacidad: data.capacity,
@@ -80,12 +81,12 @@ export const CreateMesa = () => {
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <div className='m-2'>
                         <label htmlFor="number" className="form-label">Numero</label>
-                        <input type="number"  id="number" className={`form-control m-2 ${errors.number ? 'is-invalid' : ''}`} placeholder="Ingrese el numero de la mesa" autoComplete="number" {...register('number', { required: true })}/>
+                        <input type="number" min="0" id="number" className={`form-control m-2 ${errors.number ? 'is-invalid' : ''}`} placeholder="Ingrese el numero de la mesa" autoComplete="number" {...register('number', { required: true })}/>
                         {errors.number && <div className="invalid-feedback">Por favor, ingrese el numero de la mesa</div>}
                     </div>
                     <div className='m-2'>
                         <label htmlFor="capacity" className="form-label">Capacidad</label>
-                        <input type="number"  id="capacity" className={`form-control m-2 ${errors.capacity ? 'is-invalid' : ''}`} placeholder="Ingrese la capacidad de la mesa" autoComplete="capacity" {...register('capacity', { required: true })}/>
+                        <input type="number" min="0" id="capacity" className={`form-control m-2 ${errors.capacity ? 'is-invalid' : ''}`} placeholder="Ingrese la capacidad de la mesa" autoComplete="capacity" {...register('capacity', { required: true })}/>
                         {errors.capacity && <div className="invalid-feedback">Por favor, ingrese la capacidad de la mesa</div>}
                     </div>
                     <div className="m-2">
